@@ -24,37 +24,85 @@ namespace comp110_worksheet_7
 		// Return the total size, in bytes, of all the files below the given directory
 		public static long GetTotalSize(string directory)
 		{
-			throw new NotImplementedException();
+            string[] files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories);
+            long totalSize = 0;
+
+            foreach(string file in files)
+            {
+                totalSize += GetFileSize(file);
+            }
+
+            return totalSize;
 		}
 
 		// Return the number of files (not counting directories) below the given directory
 		public static int CountFiles(string directory)
 		{
-			throw new NotImplementedException();
+            string[] files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories);
+
+            return files.Length;
 		}
 
 		// Return the nesting depth of the given directory. A directory containing only files (no subdirectories) has a depth of 0.
 		public static int GetDepth(string directory)
 		{
-			throw new NotImplementedException();
+            string[] directories = Directory.GetDirectories(directory);
+            int depth = 0;
+
+            foreach(string element in directories)
+            {
+                depth++;
+            }
+            return depth;
 		}
 
 		// Get the path and size (in bytes) of the smallest file below the given directory
 		public static Tuple<string, long> GetSmallestFile(string directory)
 		{
-			throw new NotImplementedException();
+            string[] files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories);
+            Tuple<string, long> sizeOfFile = new Tuple<string, long>("file", long.MaxValue);
+
+            string smallestFile = (from file in files let length = GetFileSize(file) where length > 0 orderby length ascending select file).First();
+            long minSize = GetFileSize(smallestFile);
+
+            string minSizePath = smallestFile;
+
+            sizeOfFile = new Tuple<string, long>(minSizePath, minSize);
+            return sizeOfFile;
 		}
 
 		// Get the path and size (in bytes) of the largest file below the given directory
 		public static Tuple<string, long> GetLargestFile(string directory)
 		{
-			throw new NotImplementedException();
+            string[] files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories);
+            Tuple<string, long> sizeOfFile = new Tuple<string, long>("file", long.MaxValue);
+
+            string largestFile = (from file in files let length = GetFileSize(file) where length > 0 orderby length descending select file).First();
+            long maxSize = GetFileSize(largestFile);
+
+            string maxSizePath = largestFile;
+
+            sizeOfFile = new Tuple<string, long>(maxSizePath, maxSize);
+            return sizeOfFile;
 		}
 
 		// Get all files whose size is equal to the given value (in bytes) below the given directory
 		public static IEnumerable<string> GetFilesOfSize(string directory, long size)
 		{
-			throw new NotImplementedException();
+            string[] files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories);
+            List<string> filesOfSize = new List<string>();
+
+            long sizeFile;
+
+            foreach(string file in files)
+            {
+                sizeFile = GetFileSize(file);
+                if (sizeFile == size)
+                {
+                    filesOfSize.Add(file);
+                }
+            }
+            return filesOfSize;
 		}
 	}
 }
